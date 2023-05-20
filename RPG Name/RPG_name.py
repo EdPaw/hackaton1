@@ -65,7 +65,6 @@ def display_random_image():
 
 
 def main():
-
     long = how_long_is_name()
     name = connect_name_parts(long)
     print(name)
