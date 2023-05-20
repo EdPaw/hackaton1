@@ -19,6 +19,7 @@ SELECTION_DICT = [
 
 #SIGNS = ["🟢", "❌"]
 
+
 def print_matrix(any_matrix):
     for row in any_matrix:
         for element in row:
@@ -27,7 +28,13 @@ def print_matrix(any_matrix):
 
 
 def player_turn(player_sign, game_matrix, taken):
-    player = int(input(f"\nPlayer {player_sign}, mark position: "))
+
+    while True:
+        player = input(f"\nPlayer {player_sign}, mark position 1-9: ")
+        if player.isdigit():
+            player = int(player)
+            if player in range(1, 10):
+                break
 
     dicty = SELECTION_DICT[player - 1]
     row = dicty["row"]
@@ -51,7 +58,7 @@ def computer_turn(player_sign, game_matrix, taken):
         if computer-1 not in taken:
             break
 
-    print(f"\nComputer{player_sign}, mark position: {computer}")
+    print(f"\nComputer {player_sign}, mark position: {computer}")
     dicty = SELECTION_DICT[computer - 1]
     row = dicty["row"]
     column = dicty["column"]
@@ -89,16 +96,31 @@ def win_all(game_matrix):
 def check_win(player_sign, turn, game_matrix):
     turn += 1
     if win_all(game_matrix):
-        print(f"\nThe winner is {player_sign} player. Congratulations!")
+        print(f"\nThe winner is {player_sign}. Congratulations!")
         return True
     if turn == 10:
         print("There is no winner")
         return True
 
 
-def main():
+def type_of_game():
     print("TIC TAC TOE GAME")
-    vs = input("Do you want to play with PC or another Player? PC/P: ")
+    while True:
+        vs = input("Do you want to play with PC or another Player? Enter PC or P: ").upper()
+        if vs == "PC" or vs == "P":
+            break
+
+    if vs == "P":
+        vs_pretty = "player"
+    elif vs == "PC":
+        vs_pretty = "computer"
+
+    return vs_pretty
+
+
+def main():
+
+    vs_pretty = type_of_game()
     taken = []
     print_matrix(matrix)
 
@@ -112,9 +134,9 @@ def main():
         if turn == 10 or win1 or win2:
             break
 
-        if vs == "PC":
+        if vs_pretty == "computer":
             computer_turn("❌", matrix, taken)
-        elif vs == "Player":
+        elif vs_pretty == "player":
             player_turn("❌", matrix, taken)
 
         win2 = check_win("❌", turn, matrix)
