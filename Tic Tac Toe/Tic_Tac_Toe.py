@@ -26,7 +26,7 @@ def print_matrix(any_matrix):
         print()
 
 
-def player_turn(player_sign, game_matrix):
+def player_turn(player_sign, game_matrix, taken):
     player = int(input(f"\nPlayer {player_sign}, mark position: "))
 
     dicty = SELECTION_DICT[player - 1]
@@ -40,19 +40,23 @@ def player_turn(player_sign, game_matrix):
     else:
         game_matrix[row][column] = player_sign
         print_matrix(game_matrix)
-        return game_matrix
+        taken.append(player-1)
+        return game_matrix, taken
 
 
-def computer_turn(player_sign, game_matrix):
+def computer_turn(player_sign, game_matrix, taken):
 
-    computer = random.randint(1, 9)
+    while True:
+        computer = random.randint(1, 9)
+        if computer not in taken:
+            break
+
     dicty = SELECTION_DICT[computer - 1]
     row = dicty["row"]
     column = dicty["column"]
 
-    if game_matrix[row][column] == "🟢" or game_matrix[row][column] == "❌":
-        game_matrix[row][column] = player_sign
-        print_matrix(game_matrix)
+    game_matrix[row][column] = player_sign
+    print_matrix(game_matrix)
         return game_matrix
 
 
@@ -92,7 +96,7 @@ def check_win(player_sign, turn, game_matrix):
 
 def main():
     print("TIC TAC TOE GAME")
-
+    taken = []
     print_matrix(matrix)
 
     turn = 1
@@ -100,12 +104,12 @@ def main():
     win2 = False
 
     while True:
-        player_turn("🟢", matrix)
+        player_turn("🟢", matrix, taken)
         win1 = check_win("🟢", turn, matrix)
         if turn == 10 or win1 or win2:
             break
 
-        player_turn("❌", matrix)
+        player_turn("❌", matrix, taken)
         win2 = check_win("❌", turn, matrix)
         if turn == 10 or win1 or win2:
             break
