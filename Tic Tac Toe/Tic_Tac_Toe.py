@@ -48,16 +48,18 @@ def computer_turn(player_sign, game_matrix, taken):
 
     while True:
         computer = random.randint(1, 9)
-        if computer not in taken:
+        if computer-1 not in taken:
             break
 
+    print(f"\nComputer{player_sign}, mark position: {computer}")
     dicty = SELECTION_DICT[computer - 1]
     row = dicty["row"]
     column = dicty["column"]
 
     game_matrix[row][column] = player_sign
     print_matrix(game_matrix)
-        return game_matrix
+    taken.append(computer - 1)
+    return game_matrix, taken
 
 
 def win_horizontal(game_matrix):
@@ -96,6 +98,7 @@ def check_win(player_sign, turn, game_matrix):
 
 def main():
     print("TIC TAC TOE GAME")
+    vs = input("Do you want to play with PC or another Player? PC/P: ")
     taken = []
     print_matrix(matrix)
 
@@ -109,7 +112,11 @@ def main():
         if turn == 10 or win1 or win2:
             break
 
-        player_turn("❌", matrix, taken)
+        if vs == "PC":
+            computer_turn("❌", matrix, taken)
+        elif vs == "Player":
+            player_turn("❌", matrix, taken)
+
         win2 = check_win("❌", turn, matrix)
         if turn == 10 or win1 or win2:
             break
